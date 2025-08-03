@@ -20,10 +20,16 @@
  **/
 
 #include <concepts>
+#include <cstdint>
+#include <cstdio>
+#include <exception>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include <vector>
+
+namespace {
 
 /**
  * @brief This bad function is delibritly wrong.
@@ -33,6 +39,9 @@
  * @param size Size of the Data.
  * @return true if the input starts with "FUZZ".
  */
+
+// This bad example would be caught by the static analyser, so lets cheat a
+// little NOLINTBEGIN(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 inline bool badFunction(const unsigned char* data, size_t size) {
   if (size >= 3) {
     if (data[0] == 'F') {
@@ -47,6 +56,7 @@ inline bool badFunction(const unsigned char* data, size_t size) {
   }
   return false;
 }
+// NOLINTEND(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 
 /**
  * @brief Reads a binary file into a vector of bytes.
@@ -69,7 +79,7 @@ std::vector<ByteType> readFileBinary(const std::filesystem::path& path) {
     throw std::runtime_error("Failed to open file: " + path.string());
   }
 
-  std::streamsize size = file.tellg();
+  const std::streamsize size = file.tellg();
   file.seekg(0, std::ios::beg);
 
   std::vector<ByteType> buffer(static_cast<size_t>(size));
@@ -79,6 +89,8 @@ std::vector<ByteType> readFileBinary(const std::filesystem::path& path) {
 
   return buffer;
 }
+
+}  // end anonymous namespace
 
 
 #if FUZZER_ACTIVE
@@ -96,11 +108,12 @@ extern "C" int LLVMFuzzerTestOneInput(const unsigned char* data, unsigned long s
 
 int main(int argc, char* argv[]) {
   if (argc != 2) {
-    std::cerr << "Usage: " << argv[0] << " <file_path>\n";
+    std::cerr << "Usage: " << argv[0]  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic) Thats how its done unfortunately
+              << " <file_path>\n";
     return 1;
   }
 
-  std::filesystem::path file_path(argv[1]);
+  const std::filesystem::path file_path(argv[1]);  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic) Thats how its done unfortunately
 
   if (!std::filesystem::exists(file_path)) {
     std::cerr << "File does not exist: " << file_path << "\n";

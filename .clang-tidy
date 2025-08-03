@@ -6,10 +6,12 @@ modernize-*,\
 -modernize-use-auto,\
 -modernize-raw-string-literal,\
 -modernize-return-braced-init-list,\
+-modernize-use-trailing-return-type,\
 cppcoreguidelines-*,\
 -cppcoreguidelines-pro-type-vararg,\
 -cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
 misc-*,\
+-misc-include-cleaner,\
 llvm-namespace-comment,\
 readability-*,\
 -readability-implicit-bool-cast,\
@@ -32,7 +34,15 @@ HeaderFilterRegex: ''
 FormatStyle:     none
 
 CheckOptions:
+  # min variable length is 3, but I allow these because of math
   - key: readability-identifier-length.IgnoredVariableNames
-    value: 'x|y|z|dx|dy|dz'
+    value: 'x|y|z|dx|dy|dz|t|i|n|k'
   - key: readability-identifier-length.IgnoredParameterNames
-    value: 'x|y|z|dx|dy|dz'
+    value: 'x|y|z|dx|dy|dz|t|i|n|k'
+  - key: modernize-use-trailing-return-type.LambdaStyle
+    value: all_except_auto
+  # disable global variable and internal linkage warnings for test files
+  - key: cppcoreguidelines-avoid-non-const-global-variables.GlobList
+    value: '-src/**/tests/**,-src/tests/**'
+  - key: misc-use-internal-linkage.GlobList
+    value: '-src/**/tests/**,-src/tests/**'
