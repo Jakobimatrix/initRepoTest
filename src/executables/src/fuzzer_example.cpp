@@ -27,7 +27,6 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
-#include <type_traits>
 #include <vector>
 
 // Concept must be outside the anonymous namespace for C++20
