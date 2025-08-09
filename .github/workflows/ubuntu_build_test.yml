@@ -23,7 +23,7 @@ jobs:
         run: |
           touch workspace.tar
           touch workspace.tar.gz
-          tar --exclude='workspace.tar.gz' --exclude='workspace.tar' --exclude-vcs --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar .
+          tar --exclude='workspace.tar.gz' --exclude='workspace.tar' --exclude-vcs --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -cf workspace.tar .
           tar --append -f workspace.tar .git
           gzip workspace.tar
 
