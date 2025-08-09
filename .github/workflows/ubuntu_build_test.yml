@@ -73,13 +73,6 @@ jobs:
 
       - run: tar -xzf workspace.tar.gz -C .
 
-      - uses: actions/cache@v4
-        with:
-          path: |
-            /var/lib/apt/lists
-            /var/cache/apt/archives
-          key: apt-${{ github.run_id }}
-
       - name: Install environment
         run: |
           set -e
@@ -107,13 +100,6 @@ jobs:
           path: .
 
       - run: tar -xzf workspace.tar.gz -C .
-
-      - uses: actions/cache@v4
-        with:
-          path: |
-            /var/lib/apt/lists
-            /var/cache/apt/archives
-          key: apt-${{ github.run_id }}
 
       - name: Install environment
         run: |
@@ -149,13 +135,6 @@ jobs:
           if [ -f clang_debug_build.tar.gz ]; then
             tar -xzf clang_debug_build.tar.gz -C .
           fi
-
-      - uses: actions/cache@v4
-        with:
-          path: |
-            /var/lib/apt/lists
-            /var/cache/apt/archives
-          key: apt-${{ github.run_id }}
 
       - name: Install environment
         run: |
@@ -204,13 +183,6 @@ jobs:
           path: .
 
       - run: tar -xzf workspace.tar.gz -C .
-
-      - uses: actions/cache@v4
-        with:
-          path: |
-            /var/lib/apt/lists
-            /var/cache/apt/archives
-          key: apt-${{ github.run_id }}
 
       - name: Install environment
         run: |
