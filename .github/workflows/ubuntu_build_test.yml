@@ -21,6 +21,7 @@ jobs:
 
       - name: Create workspace tar (exclude .git and IDE stuff)
         run: |
+          touch archive.tar.gz
           tar --exclude='.git' --exclude='workspace.tar.gz' --exclude='.github/workflows' --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar.gz .
 
       - uses: actions/upload-artifact@v4
