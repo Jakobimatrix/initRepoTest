@@ -14,15 +14,14 @@ jobs:
     outputs:
       run_id: ${{ github.run_id }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Update submodules
-        run: git submodule update --init --recursive
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
 
       - name: Create workspace tar (exclude .git and IDE stuff)
         run: |
-          tar --exclude='.git' --exclude='.github/workflows' --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar.gz .
+          tar --exclude='.git' --exclude='workspace.tar.gz' --exclude='.github/workflows' --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar.gz .
 
       - uses: actions/upload-artifact@v4
         with:
