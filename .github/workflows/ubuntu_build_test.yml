@@ -24,8 +24,8 @@ jobs:
           # Adding sleep to avoid "file changed as we read it" error.
           # This happens because Git or background processes update files (e.g., submodules)
           sleep 5
-          touch archive.tar.gz
-          tar --exclude='.git' --exclude='workspace.tar.gz' --exclude='.github/workflows' --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar.gz .
+          touch workspace.tar.gz
+          tar --exclude='workspace.tar.gz' --exclude-vcs --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar.gz .
 
       - uses: actions/upload-artifact@v4
         with:
