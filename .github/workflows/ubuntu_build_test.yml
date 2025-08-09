@@ -21,11 +21,11 @@ jobs:
 
       - name: Create workspace tar (exclude .git and IDE stuff)
         run: |
-          # Adding sleep to avoid "file changed as we read it" error.
-          # This happens because Git or background processes update files (e.g., submodules)
-          sleep 5
+          touch workspace.tar
           touch workspace.tar.gz
-          tar --exclude='workspace.tar.gz' --exclude-vcs --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar.gz .
+          tar --exclude='workspace.tar.gz' --exclude='workspace.tar' --exclude-vcs --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar .
+          tar --append -f workspace.tar .git
+          gzip workspace.tar
 
       - uses: actions/upload-artifact@v4
         with:
