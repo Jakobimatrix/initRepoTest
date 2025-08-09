@@ -21,8 +21,8 @@ jobs:
 
       - name: Create workspace tar (exclude .git and IDE stuff)
         run: |
-        # Adding sleep to avoid "file changed as we read it" error.
-        # This happens because Git or background processes update files (e.g., submodules)
+          # Adding sleep to avoid "file changed as we read it" error.
+          # This happens because Git or background processes update files (e.g., submodules)
           sleep 5
           touch archive.tar.gz
           tar --exclude='.git' --exclude='workspace.tar.gz' --exclude='.github/workflows' --exclude='**/.idea' --exclude='**/.vscode' --exclude='**/*.log' -czf workspace.tar.gz .
