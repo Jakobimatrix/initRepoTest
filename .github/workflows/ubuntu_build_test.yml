@@ -14,10 +14,11 @@ jobs:
     outputs:
       run_id: ${{ github.run_id }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Update submodules
+        run: git submodule update --init --recursive
 
       - name: Create workspace tar (exclude .git and IDE stuff)
         run: |
@@ -172,6 +173,17 @@ jobs:
           ./initRepo/scripts/build.sh -d -f --compiler clang
           ./initRepo/scripts/build.sh -c -r -t --compiler clang
           ./initRepo/scripts/build.sh -r -f --compiler clang
+          
+      - name: Update Workspace for clang-tidy
+        run: |
+          if [ -d "build-clang-${CLANG_VERSION}-debug" ]; then
+            tar -czf clang_debug_build.tar.gz build-clang-${CLANG_VERSION}-debug
+            echo "uploaded=true" >> $GITHUB_OUTPUT
+          else
+            echo "uploaded=false" >> $GITHUB_OUTPUT
+          fi
+
+          exit 0
 
   clang_tidy:
     runs-on: ubuntu-latest
@@ -209,14 +221,6 @@ jobs:
           rc=$?
           echo "failed=$( [ $rc -ne 0 ] && echo true || echo false)" >> $GITHUB_OUTPUT
 
-          if [ -d "build-clang-${CLANG_VERSION}-debug" ]; then
-            tar -czf clang_debug_build.tar.gz build-clang-${CLANG_VERSION}-debug
-            echo "uploaded=true" >> $GITHUB_OUTPUT
-          else
-            echo "uploaded=false" >> $GITHUB_OUTPUT
-          fi
-
-          exit 0
 
       - id: upload_art
         if: steps.tidy_result.outputs.uploaded == 'true'
