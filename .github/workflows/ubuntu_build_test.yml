@@ -179,10 +179,14 @@ jobs:
           name: gcc-debug-build
           path: .
 
+      - run: tar -xzf gcc-debug-build.tar.gz -C .
+
       - uses: actions/download-artifact@v4
         with:
           name: gcc-release-build
           path: .
+
+      - run: tar -xzf gcc-release-build.tar.gz -C .
 
       - name: Run GCC unit tests
         run: |
@@ -289,10 +293,14 @@ jobs:
           name: clang-debug-build
           path: .
 
+      - run: tar -xzf clang-debug-build.tar.gz -C .
+
       - uses: actions/download-artifact@v4
         with:
           name: clang-release-build
           path: .
+
+      - run: tar -xzf clang-release-build.tar.gz -C .
 
       - name: Run GCC unit tests
         run: |
