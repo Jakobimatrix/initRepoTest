@@ -125,9 +125,8 @@ jobs:
 
       - id: set_result
         run: |
-          pwd
-          ls -R .
-          echo "GCC_VERSION=$GCC_VERSION"
+          source initRepo/.environment || exit 1
+          if [ -f .environment ]; then source .environment; fi
           if [ -d "build-gcc-${GCC_VERSION}-debug" ] && [ -d "build-gcc-${GCC_VERSION}-release" ]; then
             tar -czf gcc_debug_build.tar.gz build-gcc-${GCC_VERSION}-debug
             tar -czf gcc_release_build.tar.gz build-gcc-${GCC_VERSION}-release
@@ -169,6 +168,7 @@ jobs:
         run: |
           source initRepo/.environment || exit 1
           if [ -f .environment ]; then source .environment; fi
+          echo "GCC_VERSION=$GCC_VERSION" >> $GITHUB_ENV
 
       - uses: actions/download-artifact@v4
         with:
@@ -193,8 +193,8 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: |
-            build-gcc-${GCC_VERSION}-debug/test_results.xml
-            build-gcc-${GCC_VERSION}-release/test_results.xml
+            build-gcc-${{ env.GCC_VERSION }}-debug/test_results.xml
+            build-gcc-${{ env.GCC_VERSION }}-release/test_results.xml
 
   clang_compile:
     runs-on: ubuntu-latest
@@ -235,6 +235,8 @@ jobs:
 
       - id: set_result
         run: |
+          source initRepo/.environment || exit 1
+          if [ -f .environment ]; then source .environment; fi
           if [ -d "build-clang-${CLANG_VERSION}-debug" ] && [ -d "build-clang-${CLANG_VERSION}-release" ]; then
             tar -czf clang_debug_build.tar.gz build-clang-${CLANG_VERSION}-debug
             tar -czf clang_release_build.tar.gz build-clang-${CLANG_VERSION}-release
@@ -276,6 +278,7 @@ jobs:
         run: |
           source initRepo/.environment || exit 1
           if [ -f .environment ]; then source .environment; fi
+          echo "CLANG_VERSION=$CLANG_VERSION" >> $GITHUB_ENV
 
       - uses: actions/download-artifact@v4
         with:
@@ -300,8 +303,8 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: |
-            build-clang-${CLANG_VERSION}-debug/test_results.xml
-            build-clang-${CLANG_VERSION}-release/test_results.xml
+            build-clang-${{ env.CLANG_VERSION }}-debug/test_results.xml
+            build-clang-${{ env.CLANG_VERSION }}-release/test_results.xml
 
 
 
