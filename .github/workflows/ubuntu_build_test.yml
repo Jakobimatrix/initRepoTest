@@ -125,6 +125,9 @@ jobs:
 
       - id: set_result
         run: |
+          pwd
+          ls -R .
+          echo "GCC_VERSION=$GCC_VERSION"
           if [ -d "build-gcc-${GCC_VERSION}-debug" ] && [ -d "build-gcc-${GCC_VERSION}-release" ]; then
             tar -czf gcc_debug_build.tar.gz build-gcc-${GCC_VERSION}-debug
             tar -czf gcc_release_build.tar.gz build-gcc-${GCC_VERSION}-release
@@ -226,9 +229,9 @@ jobs:
         run: |
           set +e
           ./initRepo/scripts/build.sh -c -d -t --compiler clang
-          ./initRepo/scripts/build.sh -d -f -t --compiler clang
+          ./initRepo/scripts/build.sh -d -f --compiler clang
           ./initRepo/scripts/build.sh -c -r -t --compiler clang
-          ./initRepo/scripts/build.sh -r -f -t --compiler clang
+          ./initRepo/scripts/build.sh -r -f --compiler clang
 
       - id: set_result
         run: |
