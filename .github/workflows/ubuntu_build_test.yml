@@ -159,7 +159,7 @@ jobs:
 
   gcc_unit_tests:
     runs-on: ubuntu-latest
-    needs: [setup, gcc_compile]
+    needs: [gcc_compile]
     outputs:
       failed: ${{ steps.gcc_unit_tests.outputs.failed }}
     steps:
@@ -206,6 +206,7 @@ jobs:
             build-gcc-${{ env.GCC_VERSION }}-debug/test_results.xml
             build-gcc-${{ env.GCC_VERSION }}-release/test_results.xml
 
+
   clang_compile:
     runs-on: ubuntu-latest
     needs: setup
@@ -238,10 +239,10 @@ jobs:
       - name: Run Clang builds
         run: |
           set +e
-          ./initRepo/scripts/build.sh -c -d -t --compiler clang
-          ./initRepo/scripts/build.sh -d -f --compiler clang
-          ./initRepo/scripts/build.sh -c -r -t --compiler clang
-          ./initRepo/scripts/build.sh -r -f --compiler clang
+          ./initRepo/scripts/build.sh -c -d -f --compiler clang
+          ./initRepo/scripts/build.sh -d -t --compiler clang
+          ./initRepo/scripts/build.sh -c -r -f --compiler clang
+          ./initRepo/scripts/build.sh -r -t --compiler clang
 
       - id: set_result
         run: |
@@ -275,7 +276,7 @@ jobs:
 
   clang_unit_tests:
     runs-on: ubuntu-latest
-    needs: [setup, clang_compile]
+    needs: [clang_compile]
     outputs:
       failed: ${{ steps.clang_unit_tests.outputs.failed }}
     steps:
@@ -323,10 +324,9 @@ jobs:
             build-clang-${{ env.CLANG_VERSION }}-release/test_results.xml
 
 
-
   clang_tidy:
     runs-on: ubuntu-latest
-    needs: [setup, clang_compile]
+    needs: [clang_compile]
     outputs:
       failed: ${{ steps.tidy_result.outputs.failed }}
     steps:
