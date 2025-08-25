@@ -96,8 +96,7 @@ jobs:
           path: .
       - run: tar -xzf workspace.tar.gz -C .
 
-      - name: Install compiler
-        run: |
+      - run: |
           set -e
           source initRepo/.environment
           if [ -f .environment ]; then source .environment; fi
@@ -120,9 +119,6 @@ jobs:
             ensure_tool_versioned clang++ "${CLANG_VERSION}"
             ensure_tool_versioned clang "${CLANG_VERSION}"
           fi
-
-      - name: Build project
-        run: |
           if [ "${{ matrix.compiler }}" = "gcc" ]; then
             if [ "${{ matrix.build_type }}" = "debug" ]; then
               ./initRepo/scripts/build.sh -c -d -t -g --compiler gcc # debug + tests + code coverage -> used by "gcc_unit_tests"
@@ -233,6 +229,9 @@ jobs:
           set -e
           tar -xzf workspace.tar.gz -C .
           tar -xzf clang_${{ matrix.build_type }}_build.tar.gz -C .
+          source initRepo/.environment
+          if [ -f .environment ]; then source .environment; fi
+          echo "CLANG_VERSION=$CLANG_VERSION" >> $GITHUB_ENV
           if [ "${{ matrix.build_type }}" = "debug" ]; then
             ./initRepo/scripts/build.sh -s -T -d -J --compiler clang
           else
