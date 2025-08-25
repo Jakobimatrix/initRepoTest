@@ -249,7 +249,7 @@ jobs:
 
   clang_tidy:
     runs-on: ubuntu-latest
-    needs: [clang_compile]
+    needs: [build]
     steps:
       - uses: actions/download-artifact@v4
         with:
