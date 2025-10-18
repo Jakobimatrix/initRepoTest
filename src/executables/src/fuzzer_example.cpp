@@ -19,6 +19,7 @@
  * @version 1.0
  **/
 
+// NOLINTBEGIN (misc-include-cleaner) Due to the compiler switch we might need different includes
 #include <concepts>
 #include <cstdint>
 #include <cstdio>
@@ -160,3 +161,5 @@ int main(int argc, char* argv[]) {
 
 
 #endif
+
+// NOLINTEND (misc-include-cleaner)
