@@ -60,6 +60,7 @@ jobs:
           install: >-
             base-devel
             git
+            p7zip
             mingw-w64-${{ matrix.arch == 'x86' && 'i686' || 'x86_64' }}-cmake
             mingw-w64-${{ matrix.arch == 'x86' && 'i686' || 'x86_64' }}-gcc
             mingw-w64-${{ matrix.arch == 'x86' && 'i686' || 'x86_64' }}-clang
@@ -71,7 +72,7 @@ jobs:
         run: |
           source initRepo/.environment
           ./initRepo/scripts/build.sh --${{ matrix.build_type }} -t --compiler ${{ matrix.compiler }} --arch ${{ matrix.arch }} --ninja
-          7z a ${{ matrix.compiler }}_${{ matrix.arch }}_${{ matrix.build_type }}_build.zip build-${{ matrix.compiler }}-${{ matrix.build_type }}-${{ matrix.arch }}
+          7za a ${{ matrix.compiler }}_${{ matrix.arch }}_${{ matrix.build_type }}_build.zip build-${{ matrix.compiler }}-${{ matrix.build_type }}-${{ matrix.arch }}
 
       - name: Setup MSVC
         if: matrix.compiler == 'msvc'
@@ -97,10 +98,20 @@ jobs:
               exit /b 1
           )
 
+          echo Running build script with: %FLAG% -t --arch %ARCH%
+          
+          rem Enable command echoing to see what's happening
+          echo on
+          
           call initRepo\scripts\build.cmd %FLAG% -t --arch %ARCH%
-          if errorlevel 1 (
-              echo Build script failed with error code %errorlevel%
-              exit /b %errorlevel%
+          set BUILD_ERROR=%errorlevel%
+          
+          echo Build script exited with code: %BUILD_ERROR%
+          if %BUILD_ERROR% neq 0 (
+              type initRepo\scripts\build.cmd
+              echo Full command that was executed:
+              echo call initRepo\scripts\build.cmd %FLAG% -t --arch %ARCH%
+              exit /b %BUILD_ERROR%
           )
           
           7z a msvc_%ARCH%_%BUILD_TYPE%_build.zip build-msvc-%BUILD_TYPE%-%ARCH%
