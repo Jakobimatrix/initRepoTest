@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 
 project(ProjectName VERSION 1.0.0 LANGUAGES C CXX)
 
@@ -29,3 +29,6 @@ add_subdirectory(src/executables)
 add_subdirectory(src/tests)
 
 endif()
+
+
+cmake_language(DEFER DIRECTORY "${CMAKE_SOURCE_DIR}" CALL remove_managed_library_cache)
